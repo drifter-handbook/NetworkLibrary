@@ -18,7 +18,7 @@ public class NetClient
     {
         netEvent.PeerConnectedEvent += peer =>
         {
-            Console.WriteLine("PeerConnected: " + peer.EndPoint);
+            Debug.Log("PeerConnected: " + peer.EndPoint);
             NetDataWriter writer = new NetDataWriter();
             writer.Put("Hello, fellow client!");
             peer.Send(writer, DeliveryMethod.ReliableUnordered);
@@ -31,23 +31,23 @@ public class NetClient
 
         netEvent.PeerDisconnectedEvent += (peer, disconnectInfo) =>
         {
-            Console.WriteLine("PeerDisconnected: " + disconnectInfo.Reason);
+            Debug.Log("PeerDisconnected: " + disconnectInfo.Reason);
             if (disconnectInfo.AdditionalData.AvailableBytes > 0)
             {
-                Console.WriteLine("Disconnect data: " + disconnectInfo.AdditionalData.GetInt());
+                Debug.Log("Disconnect data: " + disconnectInfo.AdditionalData.GetInt());
             }
         };
 
         netEvent.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
         {
-            Console.WriteLine("We got: {0}", dataReader.GetString(1000));
+            Debug.Log("We got: " + dataReader.GetString(1000));
             dataReader.Recycle();
         };
 
         natPunchEvent.NatIntroductionSuccess += (point, addrType, token) =>
         {
             var peer = net.Connect(point, ConnectionKey);
-            Console.WriteLine($"NatIntroductionSuccess. Connecting to other client: {point}, type: {addrType}, connection created: {peer != null}");
+            Debug.Log($"NatIntroductionSuccess. Connecting to other client: {point}, type: {addrType}, connection created: {peer != null}");
         };
 
         net = new NetManager(netEvent)
@@ -84,7 +84,7 @@ public class NetworkHandler : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            Console.WriteLine("C1 stopped");
+            Debug.Log("Client stopped");
             client.net.DisconnectPeer(client.net.FirstPeer, new byte[] { 1, 2, 3, 4 });
             client.net.Stop();
         }
