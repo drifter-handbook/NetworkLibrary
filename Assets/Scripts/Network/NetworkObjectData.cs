@@ -48,5 +48,5 @@ public class NetworkObjectData
 
 public class NetworkObjectDataPacket
 {
-    public byte[] data;
+    public byte[] data { get; set; }
 }

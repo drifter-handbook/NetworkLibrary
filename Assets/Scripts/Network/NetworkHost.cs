@@ -127,17 +127,17 @@ public class NetworkHost : MonoBehaviour, ISyncHost
 
 public class SceneChangePacket
 {
-    public string scene;
-    public int startingObjectID;
+    public string scene { get; set; }
+    public int startingObjectID { get; set; }
 }
 
 public class CreateNetworkObjectPacket
 {
-    public int objectID;
-    public string networkType;
+    public int objectID { get; set; }
+    public string networkType { get; set; }
 }
 
 public class DestroyNetworkObjectPacket
 {
-    public int objectID;
+    public int objectID { get; set; }
 }

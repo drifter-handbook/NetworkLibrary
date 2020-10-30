@@ -79,6 +79,6 @@ public class NetworkMessage
 
 public class NetworkMessagePacket
 {
-    public int objectID;
-    public byte[] data;
+    public int objectID { get; set; }
+    public byte[] data { get; set; }
 }
