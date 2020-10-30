@@ -17,8 +17,8 @@ public class GameController : MonoBehaviour
 
     [NonSerialized]
     public IPEndPoint NatPunchServer = new IPEndPoint(IPAddress.Parse("75.134.27.221"), 6996);
-    [NonSerialized]
-    public string NatPunchCode = "Pascal'sPennePasta";
+
+    public string RoomCode = "Pascal'sPennePasta";
 
     void Awake()
     {

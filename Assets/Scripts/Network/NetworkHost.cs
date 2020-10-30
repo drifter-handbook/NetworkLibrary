@@ -34,14 +34,14 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         // network handlers
         natPunchEvent.NatIntroductionSuccess += (point, addrType, token) =>
         {
-            var peer = netManager.Connect(point, GameController.Instance.NatPunchCode);
+            var peer = netManager.Connect(point, GameController.Instance.RoomCode);
             Debug.Log($"NatIntroductionSuccess. Connecting to client: {point}, type: {addrType}, connection created: {peer != null}");
         };
         netEvent.PeerConnectedEvent += peer => {
             Peers.Add(peer.Id);
             Debug.Log("PeerConnected: " + peer.EndPoint);
         };
-        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.NatPunchCode); };
+        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.RoomCode); };
         netEvent.NetworkReceiveEvent += (peer, reader, deliveryMethod) => {
             netPacketProcessor.ReadAllPackets(reader, peer);
         };
@@ -72,7 +72,7 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         netManager.NatPunchModule.Init(natPunchEvent);
         netManager.Start();
         netManager.NatPunchModule.SendNatIntroduceRequest(GameController.Instance.NatPunchServer.Address.ToString(),
-            GameController.Instance.NatPunchServer.Port, GameController.Instance.NatPunchCode);
+            GameController.Instance.NatPunchServer.Port, GameController.Instance.RoomCode);
         LoadObjectsInNewScene();
     }
 
@@ -80,6 +80,7 @@ public class NetworkHost : MonoBehaviour, ISyncHost
     void FixedUpdate()
     {
         netManager.PollEvents();
+        netManager.NatPunchModule.PollEvents();
         // send data packets
         netManager.SendToAll(netPacketProcessor.Write(data.ToPacket()), DeliveryMethod.Sequenced);
         // cleanup
