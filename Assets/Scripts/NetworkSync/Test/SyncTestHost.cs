@@ -20,7 +20,10 @@ public class SyncTestHost : MonoBehaviour, ISyncHost
     {
         foreach (int peerID in GameController.Instance.host.Peers)
         {
-            Debug.Log($"Test data from host: {NetworkUtils.Convert<string>(syncFromClients["test2", peerID])}");
+            if (syncFromClients["test2", peerID] != null)
+            {
+                Debug.Log($"Test2 data from host: {NetworkUtils.Convert<string>(syncFromClients["test2", peerID])}");
+            }
         }
     }
 

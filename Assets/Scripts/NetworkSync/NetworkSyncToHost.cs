@@ -21,6 +21,7 @@ public class NetworkSyncToHost : MonoBehaviour
     {
         get {
             if (!GameController.Instance.IsHost) { throw new InvalidOperationException("Invalid operation as client."); }
+            if (!NetworkUtils.GetNetworkDataFromClient(networkSync.ObjectID, peerId).ContainsKey(key)) { return null; }
             return NetworkUtils.GetNetworkDataFromClient(networkSync.ObjectID, peerId)[key];
         }
         set {
