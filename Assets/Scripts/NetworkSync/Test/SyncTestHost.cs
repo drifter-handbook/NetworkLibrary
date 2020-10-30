@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncTestHost : MonoBehaviour, ISyncHost
+public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
 {
     NetworkSync sync;
     NetworkSyncToHost syncFromClients;
@@ -13,6 +13,7 @@ public class SyncTestHost : MonoBehaviour, ISyncHost
         sync = GetComponent<NetworkSync>();
         syncFromClients = GetComponent<NetworkSyncToHost>();
         sync["test"] = "Test data.";
+        NetworkUtils.SendNetworkMessage("Message2");
     }
 
     // Update is called once per frame
@@ -29,6 +30,6 @@ public class SyncTestHost : MonoBehaviour, ISyncHost
 
     public void ReceiveNetworkMessage(NetworkMessage message)
     {
-        Debug.Log($"Received message from host: {message.contents as string}");
+        Debug.Log($"Received message from client: {message.contents as string}");
     }
 }

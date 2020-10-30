@@ -13,6 +13,7 @@ public class SyncTestClient : MonoBehaviour, ISyncClient, INetworkMessageReceive
         sync = GetComponent<NetworkSync>();
         syncToHost = GetComponent<NetworkSyncToHost>();
         syncToHost["test2"] = "I am the client.";
+        NetworkUtils.SendNetworkMessage("Message");
     }
 
     // Update is called once per frame
