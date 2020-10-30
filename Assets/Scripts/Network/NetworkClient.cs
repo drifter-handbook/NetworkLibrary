@@ -98,22 +98,10 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     IEnumerator SetSceneCoroutine(string scene, int sceneStartingObjectID)
     {
         yield return SceneManager.LoadSceneAsync(scene);
-        List<GameObject> startingEntities = LoadObjectsInNewScene(sceneStartingObjectID);
-        while (startingEntities.Any(x => !x.activeSelf))
-        {
-            // check if we have received data. If so, activate object
-            foreach (GameObject obj in startingEntities)
-            {
-                if (NetworkUtils.GetNetworkObjectData(obj.GetComponent<NetworkSync>().ObjectID).Count > 0)
-                {
-                    obj.SetActive(true);
-                }
-            }
-            yield return null;
-        }
+        LoadObjectsInNewScene(sceneStartingObjectID);
     }
     // when scene loads, init all starting network objects
-    List<GameObject> LoadObjectsInNewScene(int sceneStartingObjectID)
+    void LoadObjectsInNewScene(int sceneStartingObjectID)
     {
         List<GameObject> startingEntities =
             GameObject.FindGameObjectWithTag("NetworkStartingEntities").GetComponent<NetworkStartingEntities>().startingEntities;
@@ -129,7 +117,22 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
             sync.Initialize(sceneStartingObjectID + i, sync.NetworkType);
             obj.SetActive(false);
         }
-        return startingEntities;
+        StartCoroutine(LoadObjectsCoroutine(startingEntities));
+    }
+    IEnumerator LoadObjectsCoroutine(List<GameObject> startingEntities)
+    {
+        while (startingEntities.Any(x => !x.activeSelf))
+        {
+            // check if we have received data. If so, activate object
+            foreach (GameObject obj in startingEntities)
+            {
+                if (NetworkUtils.GetNetworkObjectData(obj.GetComponent<NetworkSync>().ObjectID).Count > 0)
+                {
+                    obj.SetActive(true);
+                }
+            }
+            yield return null;
+        }
     }
 
     void OnApplicationQuit()

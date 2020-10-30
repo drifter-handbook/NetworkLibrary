@@ -18,14 +18,11 @@ public class SyncTestClient : MonoBehaviour, ISyncClient, INetworkMessageReceive
     // Update is called once per frame
     void Update()
     {
-        if ((string)sync["test"] != null)
-        {
-            Debug.Log($"Test data from host: {NetworkUtils.Convert<string>(sync["test"])}");
-        }
+        Debug.Log($"Test data from host: {sync["test"] as string}");
     }
 
     public void ReceiveNetworkMessage(NetworkMessage message)
     {
-        Debug.Log($"Received message from host: {NetworkUtils.Convert<string>(message.contents)}");
+        Debug.Log($"Received message from host: {message.contents as string}");
     }
 }

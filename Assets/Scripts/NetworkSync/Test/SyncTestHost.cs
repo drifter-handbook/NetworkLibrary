@@ -20,15 +20,15 @@ public class SyncTestHost : MonoBehaviour, ISyncHost
     {
         foreach (int peerID in GameController.Instance.host.Peers)
         {
-            if (syncFromClients["test2", peerID] != null)
+            if (syncFromClients["test2", peerID] as string != null)
             {
-                Debug.Log($"Test2 data from host: {NetworkUtils.Convert<string>(syncFromClients["test2", peerID])}");
+                Debug.Log($"Test2 data from host: {syncFromClients["test2", peerID] as string}");
             }
         }
     }
 
     public void ReceiveNetworkMessage(NetworkMessage message)
     {
-        Debug.Log($"Received message from host: {NetworkUtils.Convert<string>(message.contents)}");
+        Debug.Log($"Received message from host: {message.contents as string}");
     }
 }

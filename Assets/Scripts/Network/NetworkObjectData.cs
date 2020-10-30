@@ -24,14 +24,11 @@ public class NetworkObjectData
         Dictionary<int, Dictionary<string, object>> newData =
             JsonConvert.DeserializeObject<Dictionary<int, Dictionary<string, object>>>(NetworkUtils.Decompress(packet.data));
         // sync keys
-        foreach (int objectID in data.Keys)
+        foreach (int objectID in newData.Keys)
         {
-            foreach (string field in data[objectID].Keys)
+            foreach (string field in newData[objectID].Keys)
             {
-                if (newData.ContainsKey(objectID) && newData[objectID].ContainsKey(field))
-                {
-                    data[objectID][field] = newData[objectID][field];
-                }
+                data[objectID][field] = newData[objectID][field];
             }
         }
     }
