@@ -7,18 +7,24 @@ public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
     NetworkSync sync;
     NetworkSyncToHost syncFromClients;
 
+    bool sentMessage = false;
+
     // Start is called before the first frame update
     void Start()
     {
         sync = GetComponent<NetworkSync>();
         syncFromClients = GetComponent<NetworkSyncToHost>();
         sync["test"] = "Test data.";
-        NetworkUtils.SendNetworkMessage("Message2");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!sentMessage && GameController.Instance.host.Peers.Count > 0)
+        {
+            NetworkUtils.SendNetworkMessage("Message2");
+            sentMessage = true;
+        }
         foreach (int peerID in GameController.Instance.host.Peers)
         {
             if (syncFromClients["test2", peerID] as string != null)
