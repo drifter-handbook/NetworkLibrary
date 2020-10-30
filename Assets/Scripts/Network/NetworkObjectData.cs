@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
 using UnityEngine;
 
 public class NetworkObjectData
@@ -26,7 +22,7 @@ public class NetworkObjectData
     public void SyncFromPacket(NetworkObjectDataPacket packet)
     {
         Dictionary<int, Dictionary<string, object>> newData =
-            JsonUtility.FromJson<Dictionary<int, Dictionary<string, object>>>(NetworkUtils.Decompress(packet.data));
+            JsonConvert.DeserializeObject<Dictionary<int, Dictionary<string, object>>>(NetworkUtils.Decompress(packet.data));
         // sync keys
         foreach (int objectID in data.Keys)
         {
@@ -42,7 +38,7 @@ public class NetworkObjectData
 
     public NetworkObjectDataPacket ToPacket()
     {
-        return new NetworkObjectDataPacket() { data = NetworkUtils.Compress(JsonUtility.ToJson(data)) };
+        return new NetworkObjectDataPacket() { data = NetworkUtils.Compress(JsonConvert.SerializeObject(data)) };
     }
 }
 

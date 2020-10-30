@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 public class NetworkMessages
@@ -33,7 +29,7 @@ public class NetworkMessages
 
     public void SyncFromPacket(NetworkMessagePacket packet)
     {
-        dynamic message = JsonUtility.FromJson<dynamic>(NetworkUtils.Decompress(packet.data));
+        dynamic message = JsonConvert.DeserializeObject<dynamic>(NetworkUtils.Decompress(packet.data));
         if (!messages.ContainsKey(packet.objectID))
         {
             messages[packet.objectID] = new List<Message>();
@@ -43,7 +39,7 @@ public class NetworkMessages
 
     public static NetworkMessagePacket ToPacket(object obj)
     {
-        return new NetworkMessagePacket() { data = NetworkUtils.Compress(JsonUtility.ToJson(obj)) };
+        return new NetworkMessagePacket() { data = NetworkUtils.Compress(JsonConvert.SerializeObject(obj)) };
     }
 
     public void Update()
