@@ -34,14 +34,14 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         // network handlers
         natPunchEvent.NatIntroductionSuccess += (point, addrType, token) =>
         {
-            var peer = netManager.Connect(point, GameController.Instance.RoomCode);
+            var peer = netManager.Connect(point, GameController.Instance.NatPunchCode);
             Debug.Log($"NatIntroductionSuccess. Connecting to client: {point}, type: {addrType}, connection created: {peer != null}");
         };
         netEvent.PeerConnectedEvent += peer => {
             Peers.Add(peer.Id);
             Debug.Log("PeerConnected: " + peer.EndPoint);
         };
-        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.RoomCode); };
+        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.NatPunchCode); };
         netEvent.NetworkReceiveEvent += (peer, reader, deliveryMethod) => {
             netPacketProcessor.ReadAllPackets(reader, peer);
         };

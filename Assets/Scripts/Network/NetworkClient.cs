@@ -3,6 +3,7 @@ using LiteNetLib.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,11 +28,11 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
         // network handlers
         natPunchEvent.NatIntroductionSuccess += (point, addrType, token) =>
         {
-            var peer = netManager.Connect(point, GameController.Instance.RoomCode);
+            var peer = netManager.Connect(point, GameController.Instance.NatPunchCode);
             Debug.Log($"NatIntroductionSuccess. Connecting to peer: {point}, type: {addrType}, connection created: {peer != null}");
         };
         netEvent.PeerConnectedEvent += peer => { Debug.Log("PeerConnected: " + peer.EndPoint); };
-        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.RoomCode); };
+        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.NatPunchCode); };
         netEvent.NetworkReceiveEvent += (peer, reader, deliveryMethod) => {
             netPacketProcessor.ReadAllPackets(reader, peer);
         };
@@ -96,23 +97,38 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     IEnumerator SetSceneCoroutine(string scene, int sceneStartingObjectID)
     {
         yield return SceneManager.LoadSceneAsync(scene);
-        LoadObjectsInNewScene(sceneStartingObjectID);
+        List<GameObject> startingEntities = LoadObjectsInNewScene(sceneStartingObjectID);
+        while (startingEntities.Any(x => !x.activeSelf))
+        {
+            // check if we have received data. If so, activate object
+            foreach (GameObject obj in startingEntities)
+            {
+                if (NetworkUtils.GetNetworkObjectData(obj.GetComponent<NetworkSync>().ObjectID).Count > 0)
+                {
+                    obj.SetActive(true);
+                }
+            }
+            yield return null;
+        }
     }
     // when scene loads, init all starting network objects
-    void LoadObjectsInNewScene(int sceneStartingObjectID)
+    List<GameObject> LoadObjectsInNewScene(int sceneStartingObjectID)
     {
         List<GameObject> startingEntities =
             GameObject.FindGameObjectWithTag("NetworkStartingEntities").GetComponent<NetworkStartingEntities>().startingEntities;
         for (int i = 0; i < startingEntities.Count; i++)
         {
-            NetworkObjects.RemoveIncorrectComponents(startingEntities[i]);
-            NetworkSync sync = startingEntities[i].GetComponent<NetworkSync>();
+            GameObject obj = startingEntities[i];
+            NetworkObjects.RemoveIncorrectComponents(obj);
+            NetworkSync sync = obj.GetComponent<NetworkSync>();
             if (string.IsNullOrWhiteSpace(sync.NetworkType))
             {
-                throw new InvalidTypeException($"NetworkType field is empty in starting network object {startingEntities[i].name}");
+                throw new InvalidTypeException($"NetworkType field is empty in starting network object {obj.name}");
             }
             sync.Initialize(sceneStartingObjectID + i, sync.NetworkType);
+            obj.SetActive(false);
         }
+        return startingEntities;
     }
 
     void OnApplicationQuit()

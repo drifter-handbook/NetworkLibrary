@@ -15,8 +15,6 @@ public class GameController : MonoBehaviour
     [NonSerialized]
     public NetworkHost host;
 
-    public string RoomCode = "By-ImmortalSimulator2020";
-
     [NonSerialized]
     public IPEndPoint NatPunchServer = new IPEndPoint(IPAddress.Parse("75.134.27.221"), 6996);
     [NonSerialized]
