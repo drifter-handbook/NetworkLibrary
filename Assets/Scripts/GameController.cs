@@ -10,15 +10,21 @@ public class GameController : MonoBehaviour
 
     public bool IsHost;
 
+    public string Username = "";
+
     [NonSerialized]
     public NetworkClient client;
     [NonSerialized]
+    public MatchmakingClient matchmakingClient;
+    [NonSerialized]
     public NetworkHost host;
+    [NonSerialized]
+    public MatchmakingHost matchmakingHost;
 
     [NonSerialized]
     public IPEndPoint NatPunchServer = new IPEndPoint(IPAddress.Parse("75.134.27.221"), 6996);
-
-    public string RoomCode = "Pascal'sPennePasta";
+    [NonSerialized]
+    public IPEndPoint MatchmakingServer = new IPEndPoint(IPAddress.Parse("75.134.27.221"), 6997);
 
     void Awake()
     {
@@ -36,11 +42,13 @@ public class GameController : MonoBehaviour
         {
             host = gameObject.AddComponent<NetworkHost>();
             host.Initialize();
+            matchmakingHost = gameObject.AddComponent<MatchmakingHost>();
         }
         else
         {
             client = gameObject.AddComponent<NetworkClient>();
             client.Initialize();
+            matchmakingClient = gameObject.AddComponent<MatchmakingClient>();
         }
     }
 

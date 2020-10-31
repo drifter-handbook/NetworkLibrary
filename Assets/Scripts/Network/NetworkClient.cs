@@ -22,17 +22,23 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     [NonSerialized]
     public NetworkObjects networkObjects;
 
+    [NonSerialized]
+    public string ConnectionKey = "";
+
+    [NonSerialized]
+    public bool GameStarted;
+
     public void Initialize()
     {
         networkObjects = GetComponent<NetworkObjects>();
         // network handlers
         natPunchEvent.NatIntroductionSuccess += (point, addrType, token) =>
         {
-            var peer = netManager.Connect(point, GameController.Instance.RoomCode);
+            var peer = netManager.Connect(point, ConnectionKey);
             Debug.Log($"NatIntroductionSuccess. Connecting to peer: {point}, type: {addrType}, connection created: {peer != null}");
         };
         netEvent.PeerConnectedEvent += peer => { Debug.Log("PeerConnected: " + peer.EndPoint); };
-        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(GameController.Instance.RoomCode); };
+        netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(ConnectionKey); };
         netEvent.NetworkReceiveEvent += (peer, reader, deliveryMethod) => {
             netPacketProcessor.ReadAllPackets(reader, peer);
         };
@@ -54,8 +60,6 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
         };
         netManager.NatPunchModule.Init(natPunchEvent);
         netManager.Start();
-        netManager.NatPunchModule.SendNatIntroduceRequest(GameController.Instance.NatPunchServer.Address.ToString(),
-            GameController.Instance.NatPunchServer.Port, GameController.Instance.RoomCode);
         LoadObjectsInNewScene(0);
     }
 
