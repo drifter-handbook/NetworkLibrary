@@ -33,7 +33,7 @@ public class MatchmakingClient : MonoBehaviour
         // get rooms
         while (JoinRoom == null)
         {
-            www = UnityWebRequest.Get($"{server}/rooms/{GameController.Instance.Username}");
+            www = UnityWebRequest.Get($"{server}/rooms/{GameController.Instance.Username}/1");
             yield return www.SendWebRequest();
             List<MatchmakingRoomEntry> roomEntries = null;
             if (www.isNetworkError || www.isHttpError)

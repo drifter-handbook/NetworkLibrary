@@ -10,6 +10,8 @@ public class MatchmakingHost : MonoBehaviour
 
     Dictionary<string, bool> sentNatPunch = new Dictionary<string, bool>();
 
+    public bool roomIsPublic = true;
+
     void Start()
     {
         StartCoroutine(PollMatchmakingServer());
@@ -25,7 +27,7 @@ public class MatchmakingHost : MonoBehaviour
     {
         string server = $"http://{GameController.Instance.MatchmakingServer.Address.ToString()}:{GameController.Instance.MatchmakingServer.Port}";
         // create room
-        UnityWebRequest www = UnityWebRequest.Post($"{server}/rooms/{GameController.Instance.Username}", "");
+        UnityWebRequest www = UnityWebRequest.Post($"{server}/rooms/{GameController.Instance.Username}/{(roomIsPublic ? 1 : 0)}", "");
         yield return www.SendWebRequest();
         MatchmakingCreateResponse createResponse = null;
         if (www.isNetworkError || www.isHttpError)
