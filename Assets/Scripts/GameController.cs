@@ -37,19 +37,6 @@ public class GameController : MonoBehaviour
             Instance = this;
         }
         DontDestroyOnLoad(gameObject);
-        // network
-        if (IsHost)
-        {
-            host = gameObject.AddComponent<NetworkHost>();
-            host.Initialize();
-            matchmakingHost = gameObject.AddComponent<MatchmakingHost>();
-        }
-        else
-        {
-            client = gameObject.AddComponent<NetworkClient>();
-            client.Initialize();
-            matchmakingClient = gameObject.AddComponent<MatchmakingClient>();
-        }
     }
 
     void Update()
@@ -58,5 +45,33 @@ public class GameController : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void StartNetworkHost()
+    {
+        host = gameObject.AddComponent<NetworkHost>();
+        NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
+        host.Initialize();
+        matchmakingHost = GetComponent<MatchmakingHost>() ?? gameObject.AddComponent<MatchmakingHost>();
+    }
+    public void StartNetworkClient(string roomCode)
+    {
+        client = gameObject.AddComponent<NetworkClient>();
+        NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
+        client.Initialize();
+        matchmakingClient = GetComponent<MatchmakingClient>() ?? gameObject.AddComponent<MatchmakingClient>();
+        matchmakingClient.JoinRoom = roomCode;
+    }
+    public void CleanupNetwork()
+    {
+        if (IsHost)
+        {
+            Destroy(host);
+        }
+        else
+        {
+            Destroy(client);
+        }
+        IsHost = false;
     }
 }

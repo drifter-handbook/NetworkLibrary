@@ -108,7 +108,11 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     void LoadObjectsInNewScene(int sceneStartingObjectID)
     {
         List<GameObject> startingEntities =
-            GameObject.FindGameObjectWithTag("NetworkStartingEntities").GetComponent<NetworkStartingEntities>().startingEntities;
+            GameObject.FindGameObjectWithTag("NetworkStartingEntities")?.GetComponent<NetworkStartingEntities>()?.startingEntities;
+        if (startingEntities == null)
+        {
+            return;
+        }
         for (int i = 0; i < startingEntities.Count; i++)
         {
             GameObject obj = startingEntities[i];

@@ -114,7 +114,11 @@ public class NetworkHost : MonoBehaviour, ISyncHost
     void LoadObjectsInNewScene()
     {
         List<GameObject> startingEntities =
-            GameObject.FindGameObjectWithTag("NetworkStartingEntities").GetComponent<NetworkStartingEntities>().startingEntities;
+            GameObject.FindGameObjectWithTag("NetworkStartingEntities")?.GetComponent<NetworkStartingEntities>()?.startingEntities;
+        if (startingEntities == null)
+        {
+            return;
+        }
         foreach (GameObject obj in startingEntities)
         {
             NetworkObjects.RemoveIncorrectComponents(obj);

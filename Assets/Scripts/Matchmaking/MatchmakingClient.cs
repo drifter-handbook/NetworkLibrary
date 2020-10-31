@@ -12,9 +12,6 @@ public class MatchmakingClient : MonoBehaviour
 
     NetworkClient client => GameController.Instance.client;
 
-    [NonSerialized]
-    public List<MatchmakingRoomEntry> Rooms;
-
     void Start()
     {
         StartCoroutine(PollMatchmakingServer());
@@ -29,40 +26,15 @@ public class MatchmakingClient : MonoBehaviour
     IEnumerator PollMatchmakingServer()
     {
         string server = $"http://{GameController.Instance.MatchmakingServer.Address.ToString()}:{GameController.Instance.MatchmakingServer.Port}";
-        UnityWebRequest www = null;
-        // get rooms
-        while (JoinRoom == null)
-        {
-            www = UnityWebRequest.Get($"{server}/rooms/{GameController.Instance.Username}/1");
-            yield return www.SendWebRequest();
-            List<MatchmakingRoomEntry> roomEntries = null;
-            if (www.isNetworkError || www.isHttpError)
-            {
-                throw new UnityException(www.error);
-            }
-            else
-            {
-                roomEntries = JsonConvert.DeserializeObject<List<MatchmakingRoomEntry>>(www.downloadHandler.text);
-                if (roomEntries != null)
-                {
-                    Rooms = roomEntries;
-                    foreach (MatchmakingRoomEntry room in Rooms)
-                    {
-                        Debug.Log($"Room entry: {room.name}: {room.room_code}, {room.users}/5");
-                    }
-                }
-            }
-            // refresh every so often for new rooms
-            yield return new WaitForSeconds(7.5f);
-        }
         // join room
-        www = UnityWebRequest.Post($"{server}/join/{JoinRoom}/{GameController.Instance.Username}", "");
+        UnityWebRequest www = UnityWebRequest.Post($"{server}/join/{JoinRoom}/{GameController.Instance.Username}", "");
         yield return www.SendWebRequest();
         MatchmakingJoinResponse joinResponse = null;
         if (www.isNetworkError || www.isHttpError)
         {
-            // TODO: room has closed error or something, or host left
-            throw new UnityException(www.error);
+            // TODO: room has closed error or something, or host left,
+            // or bad room code
+            throw new UnityException("Invalid room code.");
         }
         else
         {
@@ -93,16 +65,9 @@ public class MatchmakingClient : MonoBehaviour
                 }
             }
             // refresh only enough to keep our spot
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(8f);
         }
     }
-}
-
-public class MatchmakingRoomEntry
-{
-    public string name;
-    public string room_code;
-    public int users;
 }
 
 public class MatchmakingJoinResponse

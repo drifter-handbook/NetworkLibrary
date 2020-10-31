@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class MatchmakingHost : MonoBehaviour
 
     Dictionary<string, bool> sentNatPunch = new Dictionary<string, bool>();
 
+    [NonSerialized]
     public bool roomIsPublic = true;
 
     void Start()
@@ -38,6 +40,7 @@ public class MatchmakingHost : MonoBehaviour
         {
             createResponse = JsonConvert.DeserializeObject<MatchmakingCreateResponse>(www.downloadHandler.text);
             host.ConnectionKey = createResponse.connection_key;
+            Debug.Log($"Room code: {createResponse.room_code}");
         }
         // continuously refresh room until start
         while (!host.GameStarted)
@@ -88,7 +91,7 @@ public class MatchmakingHost : MonoBehaviour
                 }
             }
             // refresh only enough to keep our spot
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(8f);
         }
     }
 }
