@@ -16,7 +16,7 @@ public class SyncTransformClient : MonoBehaviour, ISyncClient
     // Update is called once per frame
     void Update()
     {
-        SyncableTransform2D netTransform = NetworkUtils.Convert<SyncableTransform2D>(sync["transform"]);
+        SyncableTransform2D netTransform = NetworkUtils.GetNetworkData<SyncableTransform2D>(sync["transform"]);
         transform.position = netTransform.position.ToVector3();
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, netTransform.rotation);
         Vector2 netScale = netTransform.scale.ToVector2();

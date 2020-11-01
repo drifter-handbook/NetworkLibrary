@@ -76,21 +76,24 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
 
     public void ReceiveNetworkMessage(NetworkMessage message)
     {
-        SceneChangePacket sceneChange = NetworkUtils.Convert<SceneChangePacket>(message.contents);
+        SceneChangePacket sceneChange = NetworkUtils.GetMessage<SceneChangePacket>(message.contents);
         if (sceneChange != null)
         {
             Debug.Log($"Scene change received: {sceneChange.scene}: {sceneChange.startingObjectID}.");
             SetScene(sceneChange.scene, sceneChange.startingObjectID);
+            return;
         }
-        CreateNetworkObjectPacket createObject = NetworkUtils.Convert<CreateNetworkObjectPacket>(message.contents);
+        CreateNetworkObjectPacket createObject = NetworkUtils.GetMessage<CreateNetworkObjectPacket>(message.contents);
         if (createObject != null)
         {
             networkObjects.CreateNetworkObject(createObject.objectID, createObject.networkType);
+            return;
         }
-        DestroyNetworkObjectPacket destroyObject = NetworkUtils.Convert<DestroyNetworkObjectPacket>(message.contents);
+        DestroyNetworkObjectPacket destroyObject = NetworkUtils.GetMessage<DestroyNetworkObjectPacket>(message.contents);
         if (destroyObject != null)
         {
             networkObjects.DestroyNetworkObject(destroyObject.objectID);
+            return;
         }
     }
 

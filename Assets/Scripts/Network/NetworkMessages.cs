@@ -10,19 +10,19 @@ public class NetworkMessages
     
     class Message
     {
-        public object message;
+        public string message;
         public float timestamp;
     }
 
     Dictionary<int, List<Message>> messages = new Dictionary<int, List<Message>>();
 
-    public List<object> PopMessages(int objectID)
+    public List<string> PopMessages(int objectID)
     {
         if (!messages.ContainsKey(objectID))
         {
             messages[objectID] = new List<Message>();
         }
-        List<object> contents = messages[objectID].Select(x => x.message).ToList();
+        List<string> contents = messages[objectID].Select(x => x.message).ToList();
         messages[objectID].Clear();
         return contents;
     }
@@ -30,20 +30,11 @@ public class NetworkMessages
     public void SyncFromPacket(NetworkMessagePacket packet)
     {
         string data = NetworkUtils.Decompress(packet.data);
-        object message;
-        try
-        {
-            message = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
-        }
-        catch (JsonSerializationException)
-        {
-            message = data;
-        }
         if (!messages.ContainsKey(packet.objectID))
         {
             messages[packet.objectID] = new List<Message>();
         }
-        messages[packet.objectID].Add(new Message() { message = message, timestamp = Time.deltaTime });
+        messages[packet.objectID].Add(new Message() { message = data, timestamp = Time.deltaTime });
     }
 
     public static NetworkMessagePacket ToPacket(int objectID, object obj)
@@ -78,7 +69,7 @@ public class NetworkMessages
 
 public class NetworkMessage
 {
-    public object contents;
+    public string contents;
     public int peerId;
 }
 
