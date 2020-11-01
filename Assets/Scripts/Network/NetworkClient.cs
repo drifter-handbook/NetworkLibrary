@@ -105,6 +105,7 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     IEnumerator SetSceneCoroutine(string scene, int sceneStartingObjectID)
     {
         SceneManager.LoadScene(scene);
+        yield return null;
         LoadObjectsInNewScene(sceneStartingObjectID);
         yield break;
     }
