@@ -34,7 +34,7 @@ public class SyncAnimatorClient : MonoBehaviour, ISyncClient
     // Update is called once per frame
     void Update()
     {
-        List<SyncAnimatorParameter> parameters = NetworkUtils.GetNetworkData<List<SyncAnimatorParameter>>(sync["animator_parameters"]);
+        List<SyncAnimatorParameter> parameters = NetworkUtils.GetNetworkData<List<SyncAnimatorParameter>>(sync["animator_parameters"].ToString());
         foreach (SyncAnimatorParameter parameter in parameters)
         {
             SetAnimatorParameterValue(parameter.type, parameter.name, parameter.value);
