@@ -37,9 +37,9 @@ public class NetworkMessages
         messages[packet.objectID].Add(new Message() { message = message, timestamp = Time.deltaTime });
     }
 
-    public static NetworkMessagePacket ToPacket(object obj)
+    public static NetworkMessagePacket ToPacket(int objectID, object obj)
     {
-        return new NetworkMessagePacket() { data = NetworkUtils.Compress(JsonConvert.SerializeObject(obj)) };
+        return new NetworkMessagePacket() { objectID = objectID, data = NetworkUtils.Compress(JsonConvert.SerializeObject(obj)) };
     }
 
     public void Update()

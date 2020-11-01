@@ -108,13 +108,13 @@ public static class NetworkUtils
         if (GameController.Instance.IsHost)
         {
             NetworkHost host = GameController.Instance.host;
-            host.netManager.SendToAll(host.netPacketProcessor.Write(NetworkMessages.ToPacket(obj)), deliveryMethod);
+            host.netManager.SendToAll(host.netPacketProcessor.Write(NetworkMessages.ToPacket(objectID, obj)), deliveryMethod);
         }
         // send message client -> host
         else
         {
             NetworkClient client = GameController.Instance.client;
-            client.netManager.SendToAll(client.netPacketProcessor.Write(NetworkMessages.ToPacket(obj)), deliveryMethod);
+            client.netManager.SendToAll(client.netPacketProcessor.Write(NetworkMessages.ToPacket(objectID, obj)), deliveryMethod);
         }
     }
 
