@@ -125,6 +125,11 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         {
             NetworkObjects.RemoveIncorrectComponents(obj);
             NetworkSync sync = obj.GetComponent<NetworkSync>();
+            if (obj == gameObject)
+            {
+                sync.Initialize(sync.ObjectID, sync.NetworkType);
+                continue;
+            }
             sync.Initialize(NextObjectID, sync.NetworkType);
         }
     }
