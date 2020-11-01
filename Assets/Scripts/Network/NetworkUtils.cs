@@ -119,14 +119,17 @@ public static class NetworkUtils
         }
     }
 
-    public static T GetNetworkData<T>(object obj) where T : class
+    public static T GetNetworkData<T>(string data) where T : class
     {
-        if (obj as IDictionary<string, object> == null) { return null; }
-        return Slapper.AutoMapper.Map<T>(obj as IDictionary<string, object>) as T;
+        if (data == null) { return null; }
+        Dictionary<string, object> obj = GetMessage<Dictionary<string, object>>(data);
+        if (obj == null) { return null; }
+        return Slapper.AutoMapper.Map<T>(obj) as T;
     }
 
     public static T GetMessage<T>(string data) where T : class
     {
+        if (data == null) { return null; }
         try
         {
             return JsonConvert.DeserializeObject<T>(data);

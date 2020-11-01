@@ -16,10 +16,13 @@ public class SyncTransformClient : MonoBehaviour, ISyncClient
     // Update is called once per frame
     void Update()
     {
-        SyncableTransform2D netTransform = NetworkUtils.GetNetworkData<SyncableTransform2D>(sync["transform"]);
-        transform.position = netTransform.position.ToVector3();
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, netTransform.rotation);
-        Vector2 netScale = netTransform.scale.ToVector2();
-        transform.localScale = new Vector3(netScale.x, netScale.y, transform.localScale.z);
+        SyncableTransform2D netTransform = NetworkUtils.GetNetworkData<SyncableTransform2D>(sync["transform"] as string);
+        if (netTransform != null)
+        {
+            transform.position = netTransform.position.ToVector3();
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, netTransform.rotation);
+            Vector2 netScale = netTransform.scale.ToVector2();
+            transform.localScale = new Vector3(netScale.x, netScale.y, transform.localScale.z);
+        }
     }
 }
