@@ -8,9 +8,9 @@ public class NetworkStartingEntities : MonoBehaviour
 
     void Awake()
     {
-        if (GameController.Instance.client != null)
+        foreach (GameObject obj in startingEntities)
         {
-            foreach (GameObject obj in startingEntities)
+            if (obj != GameController.Instance.gameObject)
             {
                 obj.SetActive(false);
             }

@@ -112,6 +112,7 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         }, DeliveryMethod.ReliableOrdered);
         // load scene
         SceneManager.LoadScene(scene);
+        yield return null;
         LoadObjectsInNewScene();
         yield break;
     }
@@ -134,6 +135,7 @@ public class NetworkHost : MonoBehaviour, ISyncHost
                 continue;
             }
             sync.Initialize(NextObjectID, sync.NetworkType);
+            obj.SetActive(true);
         }
     }
 
