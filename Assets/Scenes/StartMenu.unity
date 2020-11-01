@@ -822,7 +822,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7009f01919e0b334a9b25ac1baadeaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkTypePrefabs: []
+  NetworkTypePrefabs:
+  - {fileID: 5169547584772083924, guid: acb2b8b476f87ae4c9b7275a888160da, type: 3}
 --- !u!1 &1571110121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1281,7 +1282,6 @@ MonoBehaviour:
   hostGameText: {fileID: 766012433}
   hostMenu: {fileID: 703525534}
   clientMenu: {fileID: 1913856127}
-  hostGameButton: {fileID: 703525536}
 --- !u!1 &2144947343
 GameObject:
   m_ObjectHideFlags: 0

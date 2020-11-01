@@ -134,6 +134,12 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         }
     }
 
+    public GameObject CreateNetworkObject(string networkType)
+    {
+        GameObject obj = networkObjects.CreateNetworkObject(NextObjectID, networkType);
+        return obj;
+    }
+
     void OnApplicationQuit()
     {
         netManager.Stop();

@@ -46,11 +46,11 @@ public class NetworkObjects : MonoBehaviour
         return NetworkTypePrefabs.Find(x => x.name == networkType);
     }
 
-    public void CreateNetworkObject(int objectID, string networkType)
+    public GameObject CreateNetworkObject(int objectID, string networkType)
     {
         if (GameController.Instance.IsHost || NetworkUtils.GetNetworkObjectData(objectID).Count > 0)
         {
-            CreateNetworkObjectForReal(objectID, networkType);
+            return CreateNetworkObjectForReal(objectID, networkType);
         }
         // It is possible for a create request to come in before its initial data.
         // If so, queue the creation until its initial data is received.
@@ -61,6 +61,7 @@ public class NetworkObjects : MonoBehaviour
         {
             createQueue[objectID] = networkType;
         }
+        return null;
     }
     public static void RemoveIncorrectComponents(GameObject networkObj)
     {
@@ -80,12 +81,12 @@ public class NetworkObjects : MonoBehaviour
             }
         }
     }
-    void CreateNetworkObjectForReal(int objectID, string networkType)
+    GameObject CreateNetworkObjectForReal(int objectID, string networkType)
     {
         GameObject networkObj = Instantiate(GetNetworkTypePrefab(networkType));
         RemoveIncorrectComponents(networkObj);
         // initialize
-        NetworkSync sync = GetComponent<NetworkSync>();
+        NetworkSync sync = networkObj.GetComponent<NetworkSync>();
         if (sync == null)
         {
             throw new MissingComponentException($"NetworkSync component is required on Network Object {networkObj.name}");
@@ -101,6 +102,7 @@ public class NetworkObjects : MonoBehaviour
         }
         // track created network objects
         networkObjects[objectID] = networkObj;
+        return networkObj;
     }
 
     // these should be only called by client
