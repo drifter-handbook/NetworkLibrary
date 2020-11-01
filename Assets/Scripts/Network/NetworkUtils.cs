@@ -1,5 +1,6 @@
 ﻿using LiteNetLib;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -119,12 +120,9 @@ public static class NetworkUtils
         }
     }
 
-    public static T GetNetworkData<T>(string data) where T : class
+    public static T GetNetworkData<T>(object data) where T : class
     {
-        if (data == null) { return null; }
-        Dictionary<string, object> obj = GetMessage<Dictionary<string, object>>(data);
-        if (obj == null) { return null; }
-        return Slapper.AutoMapper.Map<T>(obj) as T;
+        return GetMessage<T>(data.ToString());
     }
 
     public static T GetMessage<T>(string data) where T : class
