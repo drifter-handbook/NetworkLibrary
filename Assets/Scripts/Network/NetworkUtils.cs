@@ -73,7 +73,7 @@ public static class NetworkUtils
         {
             GameController.Instance.host.data.DestroyData(objectID);
             GameController.Instance.host.networkObjects.RemoveNetworkObjectEntry(objectID);
-            SendNetworkMessage(0, new DestroyNetworkObjectPacket() { objectID = objectID });
+            SendNetworkMessage(0, new DestroyNetworkObjectPacket() { tag = typeof(DestroyNetworkObjectPacket).Name, objectID = objectID });
         }
         // destroy client's data
         else
@@ -104,7 +104,7 @@ public static class NetworkUtils
         throw new InvalidOperationException("That's not how this works.");
     }
 
-    public static void SendNetworkMessage(int objectID, object obj, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableUnordered)
+    public static void SendNetworkMessage(int objectID, object obj, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableSequenced)
     {
         // send message host -> client
         if (GameController.Instance.IsHost)

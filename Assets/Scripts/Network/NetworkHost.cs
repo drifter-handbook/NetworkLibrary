@@ -103,14 +103,17 @@ public class NetworkHost : MonoBehaviour, ISyncHost
     // coroutine for loading a scene
     IEnumerator SetSceneCoroutine(string scene)
     {
-        yield return SceneManager.LoadSceneAsync(scene);
         // send scene change event to clients
         sync.SendNetworkMessage(new SceneChangePacket()
         {
+            tag = typeof(SceneChangePacket).Name,
             scene = scene,
             startingObjectID = currentObjectID
         }, DeliveryMethod.ReliableOrdered);
+        // load scene
+        SceneManager.LoadScene(scene);
         LoadObjectsInNewScene();
+        yield break;
     }
     // when scene loads, init all starting network objects
     void LoadObjectsInNewScene()
@@ -148,17 +151,20 @@ public class NetworkHost : MonoBehaviour, ISyncHost
 
 public class SceneChangePacket
 {
+    public string tag { get; set; }
     public string scene { get; set; }
     public int startingObjectID { get; set; }
 }
 
 public class CreateNetworkObjectPacket
 {
+    public string tag { get; set; }
     public int objectID { get; set; }
     public string networkType { get; set; }
 }
 
 public class DestroyNetworkObjectPacket
 {
+    public string tag { get; set; }
     public int objectID { get; set; }
 }

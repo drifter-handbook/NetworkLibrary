@@ -44,7 +44,7 @@ public class NetworkSync : MonoBehaviour
         }
     }
 
-    public void SendNetworkMessage(object obj, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableUnordered)
+    public void SendNetworkMessage(object obj, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableSequenced)
     {
         NetworkUtils.SendNetworkMessage(ObjectID, obj, deliveryMethod);
     }

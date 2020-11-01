@@ -96,6 +96,7 @@ public class NetworkObjects : MonoBehaviour
         {
             NetworkUtils.SendNetworkMessage(0, new CreateNetworkObjectPacket()
             {
+                tag = typeof(CreateNetworkObjectPacket).Name,
                 objectID = objectID,
                 networkType = networkType
             });
