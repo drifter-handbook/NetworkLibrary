@@ -104,8 +104,9 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
     // coroutine for loading a scene
     IEnumerator SetSceneCoroutine(string scene, int sceneStartingObjectID)
     {
-        yield return SceneManager.LoadSceneAsync(scene);
+        SceneManager.LoadScene(scene);
         LoadObjectsInNewScene(sceneStartingObjectID);
+        yield break;
     }
     // when scene loads, init all starting network objects
     void LoadObjectsInNewScene(int sceneStartingObjectID)

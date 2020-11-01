@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
+public class SyncTestHost : NetworkMonoBehaviour, ISyncHost, INetworkMessageReceiver
 {
     NetworkSync sync;
     NetworkSyncToHost syncFromClients;
@@ -10,7 +10,7 @@ public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
     bool sentMessage = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         sync = GetComponent<NetworkSync>();
         syncFromClients = GetComponent<NetworkSyncToHost>();
@@ -18,7 +18,7 @@ public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         if (!sentMessage && GameController.Instance.host.Peers.Count > 0)
         {

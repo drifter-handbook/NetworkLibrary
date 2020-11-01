@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncInputClient : MonoBehaviour, ISyncClient
+public class SyncInputClient : NetworkMonoBehaviour, ISyncClient
 {
     NetworkSyncToHost syncToHost;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         syncToHost = GetComponent<NetworkSyncToHost>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         int X = 0;
         if (Input.GetKey(KeyCode.D))

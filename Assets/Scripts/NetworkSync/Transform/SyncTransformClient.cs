@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncTransformClient : MonoBehaviour, ISyncClient
+public class SyncTransformClient : NetworkMonoBehaviour, ISyncClient
 {
     NetworkSync sync;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         sync = GetComponent<NetworkSync>();
         Update();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         SyncableTransform2D netTransform = NetworkUtils.GetNetworkData<SyncableTransform2D>(sync["transform"]);
         if (netTransform != null)
