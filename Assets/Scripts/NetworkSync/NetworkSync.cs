@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkSync : MonoBehaviour
+public class NetworkSync : NetworkMonoBehaviour
 {
     public int ObjectID { get; set; } = -1;
     public string NetworkType = "";
@@ -23,7 +23,7 @@ public class NetworkSync : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         if (syncData == null)
         {
@@ -33,7 +33,7 @@ public class NetworkSync : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         foreach (NetworkMessage message in NetworkUtils.PopNetworkMessages(ObjectID))
         {
