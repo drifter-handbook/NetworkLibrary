@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncInputHost : MonoBehaviour, ISyncHost
+public class SyncInputHost : NetworkMonoBehaviour, ISyncHost
 {
     NetworkSyncToHost syncFromClients;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         syncFromClients = GetComponent<NetworkSyncToHost>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
 
     }

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncAnimatorClient : MonoBehaviour, ISyncClient
+public class SyncAnimatorClient : NetworkMonoBehaviour, ISyncClient
 {
     NetworkSync sync;
 
     Animator anim;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         sync = GetComponent<NetworkSync>();
         anim = GetComponent<Animator>();
@@ -32,7 +32,7 @@ public class SyncAnimatorClient : MonoBehaviour, ISyncClient
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         List<SyncAnimatorParameter> parameters = NetworkUtils.GetNetworkData<List<SyncAnimatorParameter>>(sync["animator_parameters"].ToString());
         foreach (SyncAnimatorParameter parameter in parameters)

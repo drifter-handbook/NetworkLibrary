@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkSyncToHost : MonoBehaviour
+public class NetworkSyncToHost : NetworkMonoBehaviour
 {
     NetworkSync networkSync;
 
@@ -30,19 +30,19 @@ public class NetworkSyncToHost : MonoBehaviour
         }
     }
 
-    void Awake()
+    public void Awake()
     {
         networkSync = GetComponent<NetworkSync>();
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
 
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
 
     }

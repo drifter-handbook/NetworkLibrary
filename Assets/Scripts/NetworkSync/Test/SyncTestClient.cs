@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncTestClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
+public class SyncTestClient : NetworkMonoBehaviour, ISyncClient, INetworkMessageReceiver
 {
     NetworkSync sync;
     NetworkSyncToHost syncToHost;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         sync = GetComponent<NetworkSync>();
         syncToHost = GetComponent<NetworkSyncToHost>();
@@ -17,7 +17,7 @@ public class SyncTestClient : MonoBehaviour, ISyncClient, INetworkMessageReceive
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         Debug.Log($"Test data from host: {sync["test"] as string}");
     }

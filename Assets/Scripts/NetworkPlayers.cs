@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkPlayers : MonoBehaviour, ISyncHost
+public class NetworkPlayers : NetworkMonoBehaviour, ISyncHost
 {
     NetworkSyncToHost syncFromClients;
 
@@ -12,7 +12,7 @@ public class NetworkPlayers : MonoBehaviour, ISyncHost
     Dictionary<int, GameObject> clientPlayers = new Dictionary<int, GameObject>();
 
     // Start is called before the first frame update
-    void Start()
+    protected override void NetworkStart()
     {
         syncFromClients = GetComponent<NetworkSyncToHost>();
         // create host
@@ -27,7 +27,7 @@ public class NetworkPlayers : MonoBehaviour, ISyncHost
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void NetworkUpdate()
     {
         int X = 0;
         if (Input.GetKey(KeyCode.D))
