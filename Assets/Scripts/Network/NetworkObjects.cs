@@ -93,7 +93,7 @@ public class NetworkObjects : MonoBehaviour
         sync.Initialize(objectID, networkType);
         if (GameController.Instance.IsHost)
         {
-            NetworkUtils.SendNetworkMessage(new CreateNetworkObjectPacket()
+            NetworkUtils.SendNetworkMessage(0, new CreateNetworkObjectPacket()
             {
                 objectID = objectID,
                 networkType = networkType

@@ -116,11 +116,17 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
         for (int i = 0; i < startingEntities.Count; i++)
         {
             GameObject obj = startingEntities[i];
+            // GameController doesn't follow the same rules
             NetworkObjects.RemoveIncorrectComponents(obj);
             NetworkSync sync = obj.GetComponent<NetworkSync>();
             if (string.IsNullOrWhiteSpace(sync.NetworkType))
             {
                 throw new InvalidTypeException($"NetworkType field is empty in starting network object {obj.name}");
+            }
+            if (obj == gameObject)
+            {
+                sync.Initialize(sync.ObjectID, sync.NetworkType);
+                continue;
             }
             sync.Initialize(sceneStartingObjectID + i, sync.NetworkType);
             obj.SetActive(false);

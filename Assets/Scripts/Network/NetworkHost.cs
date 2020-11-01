@@ -18,8 +18,10 @@ public class NetworkHost : MonoBehaviour, ISyncHost
     public Dictionary<int, NetworkObjectData> clientData = new Dictionary<int, NetworkObjectData>();
     public Dictionary<int, NetworkMessages> clientMessages = new Dictionary<int, NetworkMessages>();
 
-    static int currentObjectID = 0;
+    static int currentObjectID = 1;
     public static int NextObjectID { get { return currentObjectID++; } }
+
+    NetworkSync sync => GetComponent<NetworkSync>();
 
     [NonSerialized]
     public string ConnectionKey = "";
@@ -103,7 +105,7 @@ public class NetworkHost : MonoBehaviour, ISyncHost
     {
         yield return SceneManager.LoadSceneAsync(scene);
         // send scene change event to clients
-        NetworkUtils.SendNetworkMessage(new SceneChangePacket()
+        sync.SendNetworkMessage(new SceneChangePacket()
         {
             scene = scene,
             startingObjectID = currentObjectID

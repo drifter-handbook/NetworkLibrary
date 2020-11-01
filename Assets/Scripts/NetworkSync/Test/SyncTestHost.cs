@@ -22,7 +22,7 @@ public class SyncTestHost : MonoBehaviour, ISyncHost, INetworkMessageReceiver
     {
         if (!sentMessage && GameController.Instance.host.Peers.Count > 0)
         {
-            NetworkUtils.SendNetworkMessage("Message2");
+            sync.SendNetworkMessage("Message2");
             sentMessage = true;
         }
         foreach (int peerID in GameController.Instance.host.Peers)

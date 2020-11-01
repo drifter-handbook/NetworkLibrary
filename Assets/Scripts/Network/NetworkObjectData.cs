@@ -26,6 +26,10 @@ public class NetworkObjectData
         // sync keys
         foreach (int objectID in newData.Keys)
         {
+            if (!data.ContainsKey(objectID))
+            {
+                data[objectID] = new Dictionary<string, object>();
+            }
             foreach (string field in newData[objectID].Keys)
             {
                 data[objectID][field] = newData[objectID][field];

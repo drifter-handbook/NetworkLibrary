@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteNetLib;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,11 @@ public class NetworkSync : MonoBehaviour
                 component.ReceiveNetworkMessage(message);
             }
         }
+    }
+
+    public void SendNetworkMessage(object obj, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableUnordered)
+    {
+        NetworkUtils.SendNetworkMessage(ObjectID, obj, deliveryMethod);
     }
 
     void OnDestroy()

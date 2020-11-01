@@ -51,6 +51,8 @@ public class GameController : MonoBehaviour
     {
         host = gameObject.AddComponent<NetworkHost>();
         NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
+        sync.NetworkType = "GameController";
+        sync.ObjectID = 0;
         host.Initialize();
         matchmakingHost = GetComponent<MatchmakingHost>() ?? gameObject.AddComponent<MatchmakingHost>();
     }
@@ -58,6 +60,8 @@ public class GameController : MonoBehaviour
     {
         client = gameObject.AddComponent<NetworkClient>();
         NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
+        sync.NetworkType = "GameController";
+        sync.ObjectID = 0;
         client.Initialize();
         matchmakingClient = GetComponent<MatchmakingClient>() ?? gameObject.AddComponent<MatchmakingClient>();
         matchmakingClient.JoinRoom = roomCode;

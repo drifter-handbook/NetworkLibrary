@@ -84,7 +84,9 @@ public class MatchmakingUI : MonoBehaviour
     {
         if (!isClienting)
         {
+            isClienting = true;
             hostMenu.GetComponent<Image>().color = Color.clear;
+            hostMenu.GetComponentInChildren<Text>().color = Color.clear;
             hostMenu.GetComponent<Button>().interactable = false;
             GameController.Instance.StartNetworkClient(roomCode);
         }
