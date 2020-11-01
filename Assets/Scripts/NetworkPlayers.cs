@@ -53,8 +53,8 @@ public class NetworkPlayers : MonoBehaviour, ISyncHost
         {
             if (syncFromClients["X", peerID] as object != null)
             {
-                clientPlayers[peerID].GetComponent<PlayerMovement>().InputX = (int)syncFromClients["X", peerID];
-                clientPlayers[peerID].GetComponent<PlayerMovement>().InputY = (int)syncFromClients["Y", peerID];
+                clientPlayers[peerID].GetComponent<PlayerMovement>().InputX = int.Parse(syncFromClients["X", peerID].ToString());
+                clientPlayers[peerID].GetComponent<PlayerMovement>().InputY = int.Parse(syncFromClients["Y", peerID].ToString());
             }
         }
     }
