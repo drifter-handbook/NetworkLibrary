@@ -10,7 +10,7 @@ public class SyncTransformClient : NetworkMonoBehaviour, ISyncClient
     protected override void NetworkStart()
     {
         sync = GetComponent<NetworkSync>();
-        Update();
+        NetworkUpdate();
     }
 
     // Update is called once per frame
