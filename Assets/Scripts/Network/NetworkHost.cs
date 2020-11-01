@@ -111,9 +111,8 @@ public class NetworkHost : MonoBehaviour, ISyncHost
             startingObjectID = currentObjectID
         }, DeliveryMethod.ReliableOrdered);
         // load scene
-        SceneManager.LoadScene(scene);
+        yield return SceneManager.LoadSceneAsync(scene);
         LoadObjectsInNewScene();
-        yield break;
     }
     // when scene loads, init all starting network objects
     void LoadObjectsInNewScene()
