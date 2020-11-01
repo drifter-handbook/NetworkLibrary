@@ -42,6 +42,10 @@ public class SyncAnimatorHost : MonoBehaviour, ISyncHost
     // Update is called once per frame
     void Update()
     {
+        foreach (SyncAnimatorParameter parameter in parameters)
+        {
+            parameter.value = GetAnimatorParameterValue(parameter.type, parameter.name);
+        }
         sync["animator_parameters"] = parameters;
     }
 }
