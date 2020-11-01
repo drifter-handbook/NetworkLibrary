@@ -118,9 +118,10 @@ public static class NetworkUtils
         }
     }
 
-    public static T Convert<T>(dynamic obj) where T : class
+    public static T Convert<T>(object obj) where T : class
     {
-        return Slapper.AutoMapper.MapDynamic<T>(obj) as T;
+        if (obj as IDictionary<string, object> == null) { return null; }
+        return Slapper.AutoMapper.Map<T>(obj as IDictionary<string, object>) as T;
     }
 
     public static byte[] Compress(string dataString)

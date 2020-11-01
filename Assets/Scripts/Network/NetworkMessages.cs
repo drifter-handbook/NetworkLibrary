@@ -10,26 +10,35 @@ public class NetworkMessages
     
     class Message
     {
-        public dynamic message;
+        public object message;
         public float timestamp;
     }
 
     Dictionary<int, List<Message>> messages = new Dictionary<int, List<Message>>();
 
-    public List<dynamic> PopMessages(int objectID)
+    public List<object> PopMessages(int objectID)
     {
         if (!messages.ContainsKey(objectID))
         {
             messages[objectID] = new List<Message>();
         }
-        List<dynamic> contents = messages[objectID].Select(x => x.message).ToList();
+        List<object> contents = messages[objectID].Select(x => x.message).ToList();
         messages[objectID].Clear();
         return contents;
     }
 
     public void SyncFromPacket(NetworkMessagePacket packet)
     {
-        dynamic message = JsonConvert.DeserializeObject<dynamic>(NetworkUtils.Decompress(packet.data));
+        string data = NetworkUtils.Decompress(packet.data);
+        object message;
+        try
+        {
+            message = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
+        }
+        catch (JsonSerializationException)
+        {
+            message = data;
+        }
         if (!messages.ContainsKey(packet.objectID))
         {
             messages[packet.objectID] = new List<Message>();
@@ -69,7 +78,7 @@ public class NetworkMessages
 
 public class NetworkMessage
 {
-    public dynamic contents;
+    public object contents;
     public int peerId;
 }
 
