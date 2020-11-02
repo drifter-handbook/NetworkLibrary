@@ -14,6 +14,11 @@ public class NetworkSyncToHost : MonoBehaviour
         }
         set {
             if (GameController.Instance.IsHost) { throw new InvalidOperationException("Invalid operation as host."); }
+            INetworkData data = value as INetworkData;
+            if (data != null)
+            {
+                data.Type = data.GetType().Name;
+            }
             NetworkUtils.GetNetworkDataToHost(networkSync.ObjectID)[key] = value;
         }
     }
@@ -26,6 +31,11 @@ public class NetworkSyncToHost : MonoBehaviour
         }
         set {
             if (!GameController.Instance.IsHost) { throw new InvalidOperationException("Invalid operation as client."); }
+            INetworkData data = value as INetworkData;
+            if (data != null)
+            {
+                data.Type = data.GetType().Name;
+            }
             NetworkUtils.GetNetworkDataFromClient(networkSync.ObjectID, peerId)[key] = value;
         }
     }

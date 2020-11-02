@@ -76,21 +76,21 @@ public class NetworkClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
 
     public void ReceiveNetworkMessage(NetworkMessage message)
     {
-        SceneChangePacket sceneChange = NetworkUtils.GetMessage<SceneChangePacket>(message.contents);
-        if (sceneChange != null && sceneChange.tag == typeof(SceneChangePacket).Name)
+        SceneChangePacket sceneChange = NetworkUtils.GetNetworkData<SceneChangePacket>(message.contents);
+        if (sceneChange != null)
         {
             Debug.Log($"Scene change received: {sceneChange.scene}: {sceneChange.startingObjectID}.");
             SetScene(sceneChange.scene, sceneChange.startingObjectID);
             return;
         }
-        CreateNetworkObjectPacket createObject = NetworkUtils.GetMessage<CreateNetworkObjectPacket>(message.contents);
-        if (createObject != null && sceneChange.tag == typeof(CreateNetworkObjectPacket).Name)
+        CreateNetworkObjectPacket createObject = NetworkUtils.GetNetworkData<CreateNetworkObjectPacket>(message.contents);
+        if (createObject != null)
         {
             networkObjects.CreateNetworkObject(createObject.objectID, createObject.networkType);
             return;
         }
-        DestroyNetworkObjectPacket destroyObject = NetworkUtils.GetMessage<DestroyNetworkObjectPacket>(message.contents);
-        if (destroyObject != null && sceneChange.tag == typeof(DestroyNetworkObjectPacket).Name)
+        DestroyNetworkObjectPacket destroyObject = NetworkUtils.GetNetworkData<DestroyNetworkObjectPacket>(message.contents);
+        if (destroyObject != null)
         {
             networkObjects.DestroyNetworkObject(destroyObject.objectID);
             return;

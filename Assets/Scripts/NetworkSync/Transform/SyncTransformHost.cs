@@ -57,8 +57,9 @@ public class SyncableVector3
     }
 }
 
-public class SyncableTransform2D
+public class SyncableTransform2D : INetworkData
 {
+    public string Type { get; set; }
     public SyncableVector3 position;
     public float rotation;
     public SyncableVector2 scale;

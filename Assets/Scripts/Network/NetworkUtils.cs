@@ -73,7 +73,7 @@ public static class NetworkUtils
         {
             GameController.Instance.host.data.DestroyData(objectID);
             GameController.Instance.host.networkObjects.RemoveNetworkObjectEntry(objectID);
-            SendNetworkMessage(0, new DestroyNetworkObjectPacket() { tag = typeof(DestroyNetworkObjectPacket).Name, objectID = objectID });
+            SendNetworkMessage(0, new DestroyNetworkObjectPacket() { objectID = objectID });
         }
         // destroy client's data
         else
@@ -120,17 +120,18 @@ public static class NetworkUtils
         }
     }
 
-    public static T GetNetworkData<T>(object data) where T : class
+    public static T GetNetworkData<T>(object netData) where T : class, INetworkData
     {
-        return GetMessage<T>(data.ToString());
-    }
-
-    public static T GetMessage<T>(string data) where T : class
-    {
+        string data = netData.ToString();
         if (data == null) { return null; }
         try
         {
-            return JsonConvert.DeserializeObject<T>(data);
+            T obj = JsonConvert.DeserializeObject<T>(data);
+            if (obj.Type != typeof(T).Name)
+            {
+                return null;
+            }
+            return obj;
         }
         catch (JsonSerializationException)
         {

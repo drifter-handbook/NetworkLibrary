@@ -39,6 +39,11 @@ public class NetworkMessages
 
     public static NetworkMessagePacket ToPacket(int objectID, object obj)
     {
+        INetworkData message = obj as INetworkData;
+        if (message != null)
+        {
+            message.Type = obj.GetType().Name;
+        }
         return new NetworkMessagePacket() { objectID = objectID, data = NetworkUtils.Compress(JsonConvert.SerializeObject(obj)) };
     }
 
@@ -77,4 +82,9 @@ public class NetworkMessagePacket
 {
     public int objectID { get; set; }
     public byte[] data { get; set; }
+}
+
+public interface INetworkData
+{
+    string Type { get; set; }
 }

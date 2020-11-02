@@ -12,7 +12,14 @@ public class NetworkSync : MonoBehaviour
     public Dictionary<string, object> syncData;
     public object this[string key] {
         get { return syncData[key]; }
-        set { syncData[key] = value; }
+        set {
+            INetworkData data = value as INetworkData;
+            if (data != null)
+            {
+                data.Type = data.GetType().Name;
+            }
+            syncData[key] = value;
+        }
     }
 
     public void Initialize(int objectID, string networkType)

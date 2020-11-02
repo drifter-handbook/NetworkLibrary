@@ -46,7 +46,16 @@ public class SyncAnimatorHost : MonoBehaviour, ISyncHost
         {
             parameter.value = GetAnimatorParameterValue(parameter.type, parameter.name);
         }
-        sync["animator_parameters"] = parameters;
+        sync["animator_parameters"] = new SyncAnimatorData() { parameters = parameters };
+    }
+
+    public void SetTrigger(string name)
+    {
+        anim.SetTrigger(name);
+        if (GameController.Instance.IsHost)
+        {
+            sync.SendNetworkMessage(new SyncAnimatorTriggerMessage() { name = name });
+        }
     }
 }
 
@@ -55,4 +64,16 @@ public class SyncAnimatorParameter
     public string name;
     public AnimatorControllerParameterType type;
     public object value;
+}
+
+public class SyncAnimatorData : INetworkData
+{
+    public string Type { get; set; }
+    public List<SyncAnimatorParameter> parameters;
+}
+
+public class SyncAnimatorTriggerMessage : INetworkData
+{
+    public string Type { get; set; }
+    public string name;
 }

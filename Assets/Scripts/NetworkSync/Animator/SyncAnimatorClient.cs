@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncAnimatorClient : MonoBehaviour, ISyncClient
+public class SyncAnimatorClient : MonoBehaviour, ISyncClient, INetworkMessageReceiver
 {
     NetworkSync sync;
 
@@ -34,10 +34,19 @@ public class SyncAnimatorClient : MonoBehaviour, ISyncClient
     // Update is called once per frame
     void Update()
     {
-        List<SyncAnimatorParameter> parameters = NetworkUtils.GetNetworkData<List<SyncAnimatorParameter>>(sync["animator_parameters"].ToString());
-        foreach (SyncAnimatorParameter parameter in parameters)
+        SyncAnimatorData syncAnim = NetworkUtils.GetNetworkData<SyncAnimatorData>(sync["animator_parameters"]);
+        foreach (SyncAnimatorParameter parameter in syncAnim.parameters)
         {
             SetAnimatorParameterValue(parameter.type, parameter.name, parameter.value);
+        }
+    }
+
+    public void ReceiveNetworkMessage(NetworkMessage message)
+    {
+        SyncAnimatorTriggerMessage trigger = NetworkUtils.GetNetworkData<SyncAnimatorTriggerMessage>(message.contents);
+        if (trigger != null)
+        {
+            anim.SetTrigger(trigger.name);
         }
     }
 }

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SyncInputClient : MonoBehaviour, ISyncClient
 {
+    NetworkSync sync;
     NetworkSyncToHost syncToHost;
 
     // Start is called before the first frame update
     void Start()
     {
+        sync = GetComponent<NetworkSync>();
         syncToHost = GetComponent<NetworkSyncToHost>();
     }
 
@@ -35,5 +37,14 @@ public class SyncInputClient : MonoBehaviour, ISyncClient
         }
         syncToHost["X"] = X;
         syncToHost["Y"] = Y;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            sync.SendNetworkMessage(new SyncPlayerActionMessage());
+        }
     }
+}
+
+public class SyncPlayerActionMessage : INetworkData
+{
+    public string Type { get; set; }
 }
