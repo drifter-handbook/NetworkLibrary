@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using LiteNetLib;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ public class SyncInputClient : MonoBehaviour, ISyncClient
         syncToHost["Y"] = Y;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            sync.SendNetworkMessage(new SyncPlayerActionMessage());
+            sync.SendNetworkMessage(new SyncPlayerActionMessage(), DeliveryMethod.ReliableUnordered);
         }
     }
 }
