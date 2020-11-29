@@ -49,12 +49,6 @@ public class NetworkHost : MonoBehaviour, ISyncHost
         netEvent.PeerConnectedEvent += peer => {
             Peers.Add(peer.Id);
             Debug.Log("PeerConnected: " + peer.EndPoint);
-            // TODO: Display lobby somehow
-            NetworkUtils.SendNetworkMessageToPeer(peer.Id, 0, new SceneChangePacket()
-            {
-                scene = "CharacterSelect",
-                startingObjectID = 1
-            }, DeliveryMethod.ReliableOrdered);
         };
         netEvent.ConnectionRequestEvent += request => { request.AcceptIfKey(ConnectionKey); };
         netEvent.NetworkReceiveEvent += (peer, reader, deliveryMethod) => {
