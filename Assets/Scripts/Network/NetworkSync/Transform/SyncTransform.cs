@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncTransformHost : MonoBehaviour, ISyncHost
+public class SyncTransform : MonoBehaviour
 {
     NetworkSync sync;
+
+    SyncableTransform2D netTransform
+    {
+        get { return NetworkUtils.GetNetworkData<SyncableTransform2D>(sync["transform"]); }
+        set { sync["transform"] = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -16,12 +22,22 @@ public class SyncTransformHost : MonoBehaviour, ISyncHost
     // Update is called once per frame
     void Update()
     {
-        sync["transform"] = new SyncableTransform2D()
+        if (GameController.Instance.IsHost)
         {
-            position = new SyncableVector3(transform.position),
-            rotation = transform.eulerAngles.z,
-            scale = new SyncableVector2(transform.localScale)
-        };
+            netTransform = new SyncableTransform2D()
+            {
+                position = new SyncableVector3(transform.position),
+                rotation = transform.eulerAngles.z,
+                scale = new SyncableVector2(transform.localScale)
+            };
+        }
+        else if (netTransform != null)
+        {
+            transform.position = netTransform.position.ToVector3();
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, netTransform.rotation);
+            Vector2 netScale = netTransform.scale.ToVector2();
+            transform.localScale = new Vector3(netScale.x, netScale.y, transform.localScale.z);
+        }
     }
 }
 

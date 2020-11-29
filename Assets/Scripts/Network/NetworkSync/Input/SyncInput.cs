@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncInputClient : MonoBehaviour, ISyncClient
+public class SyncInput : MonoBehaviour, ISyncClient
 {
     NetworkSync sync;
     NetworkSyncToHost syncToHost;

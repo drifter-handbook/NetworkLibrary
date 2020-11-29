@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SyncAnimatorHost : MonoBehaviour, ISyncHost
+public class SyncAnimator : MonoBehaviour, INetworkMessageReceiver
 {
     NetworkSync sync;
 
     List<SyncAnimatorParameter> parameters = new List<SyncAnimatorParameter>();
 
     Animator anim;
+
+    SyncAnimatorData animatorParameters
+    {
+        get { return NetworkUtils.GetNetworkData<SyncAnimatorData>(sync["animator_parameters"]); }
+        set { sync["animator_parameters"] = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -43,14 +49,47 @@ public class SyncAnimatorHost : MonoBehaviour, ISyncHost
         return null;
     }
 
+    void SetAnimatorParameterValue(AnimatorControllerParameterType type, string name, object value)
+    {
+        switch (type)
+        {
+            case AnimatorControllerParameterType.Bool:
+                anim.SetBool(name, (bool)value);
+                break;
+            case AnimatorControllerParameterType.Int:
+                anim.SetInteger(name, (int)(long)value);
+                break;
+            case AnimatorControllerParameterType.Float:
+                anim.SetFloat(name, (float)(double)value);
+                break;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        foreach (SyncAnimatorParameter parameter in parameters)
+        if (GameController.Instance.IsHost)
         {
-            parameter.value = GetAnimatorParameterValue(parameter.type, parameter.name);
+            foreach (SyncAnimatorParameter parameter in parameters)
+            {
+                parameter.value = GetAnimatorParameterValue(parameter.type, parameter.name);
+            }
+            animatorParameters = new SyncAnimatorData() { parameters = parameters };
         }
-        sync["animator_parameters"] = new SyncAnimatorData() { parameters = parameters };
+        else if (animatorParameters != null)
+        {
+            try
+            {
+                foreach (SyncAnimatorParameter parameter in animatorParameters.parameters)
+                {
+                    SetAnimatorParameterValue(parameter.type, parameter.name, parameter.value);
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                // host hasn't sent anything yet
+            }
+        }
     }
 
     public void SetTrigger(string name)
@@ -59,6 +98,15 @@ public class SyncAnimatorHost : MonoBehaviour, ISyncHost
         if (GameController.Instance.IsHost)
         {
             sync.SendNetworkMessage(new SyncAnimatorTriggerMessage() { name = name });
+        }
+    }
+
+    public void ReceiveNetworkMessage(NetworkMessage message)
+    {
+        SyncAnimatorTriggerMessage trigger = NetworkUtils.GetNetworkData<SyncAnimatorTriggerMessage>(message.contents);
+        if (trigger != null)
+        {
+            anim.SetTrigger(trigger.name);
         }
     }
 }
