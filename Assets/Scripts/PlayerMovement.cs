@@ -6,9 +6,6 @@ public class PlayerMovement : MonoBehaviour, ISyncHost
 {
     public int PeerID { get; set; }
 
-    public int InputX { get; set; }
-    public int InputY { get; set; }
-
     Rigidbody2D rb;
     Animator anim;
 
@@ -20,13 +17,13 @@ public class PlayerMovement : MonoBehaviour, ISyncHost
     }
 
     // Update is called once per frame
-    void Update()
+    public void UpdateInput(PlayerInputData input)
     {
-        anim.SetBool("Run", InputX != 0 || InputY != 0);
-        if (InputX != 0)
+        anim.SetBool("Run", input.MoveX != 0 || input.MoveY != 0);
+        if (input.MoveX != 0)
         {
-            transform.localScale = new Vector3(Mathf.Sign(InputX) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(Mathf.Round(input.MoveX) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
-        rb.velocity = new Vector2(InputX, InputY).normalized * 10f;
+        rb.velocity = new Vector2(input.MoveX, input.MoveY).normalized * 10f;
     }
 }

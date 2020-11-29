@@ -1,16 +1,25 @@
-﻿using System;
+// https://forum.unity.com/threads/help-how-do-you-set-up-a-gamemanager.131170/
+// https://wiki.unity3d.com/index.php/Toolbox
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Assertions;
 
 [DisallowMultipleComponent]
 public class GameController : MonoBehaviour
 {
-    public static GameController Instance { get; private set; }
-
+    //* Serialized members
+    [Header("Check box if hosting")]
     public bool IsHost;
 
-    public string Username = "";
+    public const int MAX_PLAYERS = 8;
+
+    public static GameController Instance { get; private set; }
+
+    public string Username = "test_user";
 
     [NonSerialized]
     public NetworkClient client;
@@ -39,29 +48,25 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Update()
+    public void UpdateSFXVolume(float val)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        AudioSource source = GetComponent<AudioSource>();
+        source.volume = val;
     }
 
     public void StartNetworkHost()
     {
         host = gameObject.AddComponent<NetworkHost>();
-        NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
-        sync.NetworkType = "GameController";
-        sync.ObjectID = 0;
+        NetworkSync sync = gameObject.AddComponent<NetworkSync>();
+        sync.Initialize(0, "GameController");
         host.Initialize();
         matchmakingHost = GetComponent<MatchmakingHost>() ?? gameObject.AddComponent<MatchmakingHost>();
     }
     public void StartNetworkClient(string roomCode)
     {
         client = gameObject.AddComponent<NetworkClient>();
-        NetworkSync sync = GetComponent<NetworkSync>() ?? gameObject.AddComponent<NetworkSync>();
-        sync.NetworkType = "GameController";
-        sync.ObjectID = 0;
+        NetworkSync sync = gameObject.AddComponent<NetworkSync>();
+        sync.Initialize(0, "GameController");
         client.Initialize();
         matchmakingClient = GetComponent<MatchmakingClient>() ?? gameObject.AddComponent<MatchmakingClient>();
         matchmakingClient.JoinRoom = roomCode;
@@ -71,11 +76,18 @@ public class GameController : MonoBehaviour
         if (IsHost)
         {
             Destroy(host);
+            host = null;
+            Destroy(matchmakingHost);
+            matchmakingHost = null;
         }
         else
         {
             Destroy(client);
+            client = null;
+            Destroy(matchmakingClient);
+            matchmakingClient = null;
         }
+        Destroy(GetComponent<NetworkSync>());
         IsHost = false;
     }
 }
