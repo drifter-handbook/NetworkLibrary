@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class SyncInput : MonoBehaviour, ISyncClient
 {
-    NetworkSync sync;
     NetworkSyncToHost syncToHost;
 
     // Start is called before the first frame update
     void Start()
     {
-        sync = GetComponent<NetworkSync>();
         syncToHost = GetComponent<NetworkSyncToHost>();
     }
 
