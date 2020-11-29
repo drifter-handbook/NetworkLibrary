@@ -1,18 +1,18 @@
-##Warning
+## Warning
 Don't use Awake() to perform network-related activities. It happens before network init can happen, meaning if you access network components during Awake(), you will get an error.
 
-##Setting username
+## Setting username
 Accessible via the inspector, or via GameController.Instance.Username
 
-##NetworkStartingEntities
+## NetworkStartingEntities
 In every networked scene with existing networked entities in the scene, drag in the NetworkStartingEntities prefab.
 Add any existing networked entities into the scene.
 
-##CreateNetworkObject
+## CreateNetworkObject
 To create a new networked object, use NetworkUtils.CreateNetworkObject(string networkType)
 To register a prefab to work with CreateNetworkObject, drag the prefab into the GameController's NetworkObjects component's "Network Type Prefabs" list.
 
-##Networked Child Objects
+## Networked Child Objects
 When an object begins being tracked by the Network system, it calls NetworkInit on any MonoBehaviours that inherit from INetworkInit. This is useful for registering child objects, which must be done in this way. Registration of child objects must be done in the same order or clients and hosts will have mismatched network object data.
 ```cs
 public class ChildObjectTest : MonoBehaviour, INetworkInit
@@ -24,11 +24,11 @@ public class ChildObjectTest : MonoBehaviour, INetworkInit
 }
 ```
 
-##Changing scenes
+## Changing scenes
 To change scenes, use the GameController.Instance.host.SetScene(string sceneName) method.
 Connected clients will also change scenes.
 
-##Synced properties
+## Synced properties
 Properties can be synced. For example, exampleToggle in the code below:
 ```cs
 public class SyncTest : MonoBehaviour
@@ -69,7 +69,7 @@ public class SyncTest : MonoBehaviour
 }
 ```
 
-##Network Messages
+## Network Messages
 Instead of a persistent variable, you can instead send a one-time message.
 ```cs
 public class MessageTest : MonoBehaviour, INetworkMessageReceiver
@@ -96,7 +96,7 @@ public class MessageTest : MonoBehaviour, INetworkMessageReceiver
 }
 ```
 
-##Syncing complex objects
+## Syncing complex objects
 You can also sync complex objects, as shown with the built-in network sync script, SyncTransform.
 ```cs
 public class SyncTransform : MonoBehaviour
@@ -140,7 +140,7 @@ public class SyncTransform : MonoBehaviour
 ```
 NetworkMessages can also send complex objects in the same way.
 
-##Client-to-host sync
+## Client-to-host sync
 Clients can also sync data with the host and send messages to the host, using the NetworkSyncToHost component.
 ```cs
 public class SyncInput : MonoBehaviour, ISyncClient
@@ -172,6 +172,6 @@ foreach (int peerID in GameController.Instance.host.Peers)
 }
 ```
 
-##Cleanup
+## Cleanup
 To end networking, call GameController.Instance.CleanupNetwork()
 Make sure to also use SceneManager.LoadScene(scene) to move to a scene without networked components, since those won't work when networking has been ended.
