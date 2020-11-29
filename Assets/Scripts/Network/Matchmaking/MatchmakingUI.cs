@@ -15,6 +15,20 @@ public class MatchmakingUI : MonoBehaviour
 
     Coroutine getRoomsCoroutine;
 
+    public static MatchmakingUI Instance { get; set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +97,13 @@ public class MatchmakingUI : MonoBehaviour
         hostButton.SetActive(false);
         startButton.SetActive(false);
         clientMenu.SetActive(false);
+    }
+
+    public void ResetUI()
+    {
+        hostButton.SetActive(true);
+        startButton.SetActive(false);
+        clientMenu.SetActive(true);
     }
 }
 
